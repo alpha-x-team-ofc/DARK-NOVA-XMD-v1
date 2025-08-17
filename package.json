@@ -28,7 +28,7 @@
     "mongoose": "^8.17.1",
     "fb-downloader-scrapper": "^3.0.1",
     "canvas": "^3.1.2",
-    "@vreden/youtube-scraper": "^1.2.7",
+    "@vreden/youtube-scraper": "^1.2.2",
     "wa-sticker-formatter": "^4.4.4",
     "dotenv": "^16.0.3"
   },
