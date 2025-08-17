@@ -1,12 +1,12 @@
 {
-  "name": "DANUWA-MD",
+  "name": "DARK-NOVA-XMD",
   "version": "1.0.0",
   "description": "A Powerfull Whatsapp Bot",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start index.js --deep-monitoring --attach --name DANUWA-MD",
-    "stop": "pm2 stop DANUWA-MD",
-    "restart": "pm2 restart DANUWA-MD"
+    "start": "pm2 start index.js --deep-monitoring --attach --name DARK-NOVA-XMD",
+    "stop": "pm2 stop DARK-NOVA-XMD",
+    "restart": "pm2 restart DARK-NOVA-XMD"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "^6.7.16",
