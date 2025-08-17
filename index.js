@@ -2,8 +2,6 @@ const {
     default: makeWASocket, 
     useMultiFileAuthState, 
     DisconnectReason, 
-    jidNormalizedUser, 
-    getContentType, 
     fetchLatestBaileysVersion, 
     Browsers 
 } = require("@whiskeysockets/baileys");
@@ -31,7 +29,7 @@ const path = require("path");
 
 // Initialize global fetch
 (async () => { 
-    const { default: fetch } = await import('node-fetch'); 
+    const { default: fetch } = await import("node-fetch"); 
     globalThis.fetch = fetch; 
 })();
 
@@ -86,157 +84,45 @@ async function connectToWA() {
 
     const robin = makeWASocket({
         logger: P({ level: "silent" }),
-        printQRInTerminal: false,
+        printQRInTerminal: true,
         browser: Browsers.macOS("Firefox"),
         syncFullHistory: true,
         auth: state,
         version,
     });
 
+    robin.ev.on("creds.update", saveCreds);
+
     // Event Handlers
     robin.ev.on("connection.update", async (update) => {
         const { connection, lastDisconnect } = update;
         
         if (connection === "close") {
-            if (lastDisconnect.error?.output?.statusCode !== DisconnectReason.loggedOut) {
+            if (lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut) {
                 console.log("🔁 Reconnecting...");
                 setTimeout(connectToWA, 5000);
             } else {
-                console.log("❌ Connection closed, please restart the bot");
+                console.log("❌ Logged out from WhatsApp. Delete auth folder and try again.");
+                process.exit(1);
             }
         } else if (connection === "open") {
-            console.log("⚙️ Installing plugins...");
-            
-            // Load plugins
-            const pluginsDir = path.join(__dirname, "plugins");
-            fs.readdirSync(pluginsDir).forEach((plugin) => {
-                if (path.extname(plugin).toLowerCase() === ".js") {
-                    try {
-                        require(path.join(pluginsDir, plugin));
-                        console.log(`✅ Loaded plugin: ${plugin}`);
-                    } catch (err) {
-                        console.error(`❌ Failed to load plugin ${plugin}:`, err);
-                    }
-                }
-            });
-
-            console.log("✅ DARK-NOVA-XMD installed successfully");
-            console.log("✅ Connected to WhatsApp");
-
-            // Send connection notifications
-            try {
-                const imageUrl = "https://github.com/dula9x/DARK-NOVA-XMD-V1-WEB-PAIR/blob/main/images/WhatsApp%20Image%202025-08-15%20at%2017.22.03_c520eb7b.jpg?raw=true";
-                const imageBuffer = await getBuffer(imageUrl);
-                
-                await robin.sendMessage(`${ownerNumber}@s.whatsapp.net`, {
-                    image: imageBuffer,
-                    caption: "DARK-NOVA-XMD connected successfully ✅"
-                });
-            } catch (err) {
-                console.error("Failed to send connection message:", err);
-            }
+            console.log("✅ DARK-NOVA-XMD Connected!");
         }
     });
 
-    robin.ev.on("creds.update", saveCreds);
-
-    // Message Handler
-    robin.ev.on("messages.upsert", async ({ messages }) => {
-        const mek = messages[0];
-        if (!mek.message) return;
-
-        // Process message
-        mek.message = getContentType(mek.message) === "ephemeralMessage" 
-            ? mek.message.ephemeralMessage.message 
-            : mek.message;
-
-        // Auto-read status
-        if (mek.key?.remoteJid === "status@broadcast" && config.AUTO_READ_STATUS === "true") {
-            await robin.readMessages([mek.key]);
-        }
-
-        const m = sms(robin, mek);
-        const type = getContentType(mek.message);
-        const from = mek.key.remoteJid;
-        
-        // Extract message body
-        let body = "";
-        switch (type) {
-            case "conversation":
-                body = mek.message.conversation;
-                break;
-            case "extendedTextMessage":
-                body = mek.message.extendedTextMessage.text;
-                break;
-            case "imageMessage":
-                body = mek.message.imageMessage?.caption || "";
-                break;
-            case "videoMessage":
-                body = mek.message.videoMessage?.caption || "";
-                break;
-        }
-
-        // Command processing
-        const isCmd = body.startsWith(prefix);
-        if (isCmd) {
-            const [cmdName, ...args] = body.slice(prefix.length).trim().split(/\s+/);
-            const q = args.join(" ");
-            
-            // Get sender info
-            const sender = mek.key.fromMe 
-                ? robin.user.id 
-                : mek.key.participant || mek.key.remoteJid;
-            const senderNumber = sender.split("@")[0];
-            const isOwner = ownerNumber.includes(senderNumber) || mek.key.fromMe;
-            
-            // Check access
-            if (config.MODE === "private" && !isOwner) return;
-            if (config.MODE === "inbox" && !isOwner && from.endsWith("@g.us")) return;
-            if (config.MODE === "groups" && !isOwner && !from.endsWith("@g.us")) return;
-
-            // Execute command
-            const events = require("./command");
-            const cmd = events.commands.find(c => 
-                c.pattern === cmdName || 
-                (c.alias && c.alias.includes(cmdName))
-            );
-
-            if (cmd) {
-                try {
-                    if (cmd.react) {
-                        await robin.sendMessage(from, { 
-                            react: { 
-                                text: cmd.react, 
-                                key: mek.key 
-                            } 
-                        });
-                    }
-
-                    await cmd.function(robin, mek, m, {
-                        from,
-                        body,
-                        command: cmdName,
-                        args,
-                        q,
-                        isOwner,
-                        // Add other context as needed
-                    });
-                } catch (err) {
-                    console.error(`[COMMAND ERROR] ${cmdName}:`, err);
-                }
+    // 📂 Plugin Loader
+    const pluginsDir = path.join(__dirname, "plugins");
+    fs.readdirSync(pluginsDir).forEach(file => {
+        if (file.endsWith(".js")) {
+            try {
+                require(path.join(pluginsDir, file));
+                console.log("✅ Plugin Loaded:", file);
+            } catch (e) {
+                console.error("❌ Error loading plugin:", file, e);
             }
         }
     });
 }
 
-// Express Server
-app.get("/", (req, res) => {
-    res.send("DARK-NOVA-XMD is running ✅");
-});
-
-app.listen(port, () => {
-    console.log(`🌐 Server listening on http://localhost:${port}`);
-});
-
-// Start the bot
-setTimeout(connectToWA, 4000);
+// Start Bot
+connectToWA();
