@@ -19,7 +19,7 @@ function convertToBool(text, fault = "true") {
 
 module.exports = {
   // Authentication
-  SESSION_ID: process.env.SESSION_ID || "your session here",
+  SESSION_ID: process.env.SESSION_ID || "3ShUxCAJ#vfCejt3UhjQZRygwNyWpJA0szr07SKlGIPRGuWp1Hfc",
   
   // Bot Owner
   OWNER_NUM: process.env.OWNER_NUM || "94752978237",
