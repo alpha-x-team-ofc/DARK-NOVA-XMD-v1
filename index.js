@@ -63,7 +63,7 @@ async function ensureSessionFile() {
 }
 
 async function connectToWA() {
-  console.log("Connecting DANUWA-MD 🧬...");
+  console.log("Connecting DARK-NOVA-XMD 🧬...");
   const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, '/auth_info_baileys/'));
   const { version } = await fetchLatestBaileysVersion();
 
@@ -85,11 +85,11 @@ async function connectToWA() {
         connectToWA();
       }
     } else if (connection === 'open') {
-      console.log('✅ DANUWA-MD connected to WhatsApp');
+      console.log('✅ DARK-NOVA-XMD connected to WhatsApp');
 
-      const up = `DANUWA-MD connected ✅\n\nPREFIX: ${prefix}`;
+      const up = `DARK-NOVA-XMD connected ✅\n\nPREFIX: ${prefix}`;
       await danuwa.sendMessage(ownerNumber[0] + "@s.whatsapp.net", {
-        image: { url: `https://github.com/DANUWA-MD/DANUWA-MD/blob/main/images/DANUWA-MD.png?raw=true` },
+        image: { url: `https://github.com/dula9x/DARK-NOVA-XMD-V1-WEB-PAIR/blob/main/images/WhatsApp%20Image%202025-08-15%20at%2017.22.03_c520eb7b.jpg?raw=true` },
         caption: up
       });
 
@@ -179,7 +179,7 @@ async function connectToWA() {
 ensureSessionFile();
 
 app.get("/", (req, res) => {
-  res.send("Hey, DANUWA-MD started✅");
+  res.send("Hey, DARK-NOVA-XMD started✅");
 });
 
 app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));
