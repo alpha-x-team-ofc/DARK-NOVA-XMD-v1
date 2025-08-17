@@ -7,6 +7,9 @@
     "start": "pm2 start index.js --deep-monitoring --attach --name DARK-NOVA-XMD",
     "stop": "pm2 stop DARK-NOVA-XMD",
     "restart": "pm2 restart DARK-NOVA-XMD"
+    "scripts": {
+  "start": "npx pm2 start index.js --deep-monitoring --attach --name DARK-NOVA-XMD"
+}
   },
     "engines": {
     "node": ">=20.0.0"
