@@ -9,14 +9,7 @@
 </img>
  <p align="center">
    
-## 𝐃𝐄𝐏𝐋𝐎𝐘 𝐒𝐄𝐓𝐔𝐏 ↕️
-
-**1. Fork This Repository**
-
-*_Start by forking this repository to your own GitHub account. Click the button below to fork:_*
-
-  <a href="https://github.com/kingmalvn/LITE-MD/fork"><img title="DARK-NOVA-XMD" src="https://img.shields.io/badge/FORK-DARK-NOVA-XMDh?color=darkblue&style=for-the-badge&logo=stackshare"></a>
-
+## 𝐃𝐄𝐏𝐋𝐎𝐘 𝐒𝐄𝐓𝐔𝐏 ↕
 <a><img src='https://i.imgur.com/LyHic3i.gif'/>
 
 🔑 Get Session ID (WhatsApp Pair Code Login)
