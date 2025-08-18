@@ -1,7 +1,6 @@
 /**
-    * DARK ALPHA XMD
+    * DARK-NOVA-XMD
  **/
-
 
 const fs = require('fs');
 if (fs.existsSync('config.env')) require('dotenv').config({ path: './config.env' });
@@ -30,5 +29,5 @@ AUTO_REACT: process.env.AUTO_REACT || "false",
 HEART_REACT: process.env.HEART_REACT || "false",
 OWNER_REACT: process.env.OWNER_REACT || "false",
 BOT_NAME: process.env.BOT_NAME || "『DARK-NOVA-XMD』",
-OMDB_API_KEY: process.env.OMDB_API_KEY || "76cb7f39", // omdbapi.com
+OMDB_API_KEY: process.env.OMDB_API_KEY || "76cb7f39",
 };
